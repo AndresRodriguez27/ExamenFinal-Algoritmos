@@ -65,34 +65,6 @@ public class ArbolHuffMan {
         return cadaux;
     }
 
-    public String arbolx(ListaS<NodoHuffman> listaNodos, String pasos, int contpaso) {
-        ListaS<NodoHuffman> aux = new ListaS();
-        int zero = 0;
-        int one = 1;
-        if (listaNodos.getTamanio() < 2) {
-            this.raiz = listaNodos.get(0);
-            return pasos;
-        }
-        NodoHuffman nodoD = listaNodos.get(one);
-        NodoHuffman nodoI = listaNodos.get(zero);
-
-        int sumaFrecuencia = nodoD.getRepeticion();
-        sumaFrecuencia = sumaFrecuencia + nodoI.getRepeticion();
-        NodoHuffman nodoR = new NodoHuffman((char) 12, sumaFrecuencia, nodoI, nodoD);
-
-        for (int i = 2; i < listaNodos.getTamanio(); i++) {
-            aux.insertarAlFinal(listaNodos.get(i));
-        }
-
-        aux.insertarAlFinal(nodoR);
-
-        aux = this.ordena(aux);
-
-        pasos += "Paso " + contpaso + ": " + aux + "\n";
-
-        return arbolx(aux, pasos, contpaso + 1);
-    }
-
     public void imprimirx(ListaS<NodoHuffman> xx) {
 
         for (NodoHuffman nodoHuffman : xx) {
@@ -119,6 +91,33 @@ public class ArbolHuffMan {
         }
 
         return lista;
+    }
+
+    public String arbolx(ListaS<NodoHuffman> listaNodos, String pasos, int contpaso) {
+        /*Si es Menor encontro la raiz*/
+        if (listaNodos.getTamanio() < 2) {
+            this.raiz = listaNodos.get(0);
+            return pasos;
+        }
+        ListaS<NodoHuffman> aux = new ListaS();
+        int zero = 0;
+        int one = 1;
+        int suma;
+        NodoHuffman nodoD = listaNodos.get(one);
+        NodoHuffman nodoI = listaNodos.get(zero);
+        suma = nodoD.getRepeticion();
+        suma = suma + nodoI.getRepeticion();
+        NodoHuffman nodoR = new NodoHuffman((char) 12, suma, nodoI, nodoD);
+
+        for (int i = 2; i < listaNodos.getTamanio(); i++) {
+            aux.insertarAlFinal(listaNodos.get(i));
+        }
+
+        aux.insertarAlFinal(nodoR);
+        aux = this.ordena(aux);
+        pasos += "Paso " + contpaso + ": " + aux + "\n";
+
+        return arbolx(aux, pasos, contpaso + 1);
     }
 
     public ListaS ordena(ListaS<NodoHuffman> lec) {
@@ -238,16 +237,16 @@ public class ArbolHuffMan {
             return list;
         }
 
-        ListaS llist = getAllRamas(nodoh.izquierdo, data);
-        if (llist.getTamanio() > 0) {
-            llist.insertarAlInicio(nodoh);
-            return llist;
+        ListaS lista = getAllRamas(nodoh.izquierdo, data);
+        if (lista.getTamanio() > 0) {
+            lista.insertarAlInicio(nodoh);
+            return lista;
         }
 
-        ListaS rlist = getAllRamas(nodoh.derecho, data);
-        if (rlist.getTamanio() > 0) {
-            rlist.insertarAlInicio(nodoh);
-            return rlist;
+        ListaS xlist = getAllRamas(nodoh.derecho, data);
+        if (xlist.getTamanio() > 0) {
+            xlist.insertarAlInicio(nodoh);
+            return xlist;
         }
         return new ListaS();
 
@@ -279,7 +278,7 @@ public class ArbolHuffMan {
     }
 
     public String codigoletra(char letra) {
-        ListaS binario = this.obtenerBinario(raiz, letra);
+        ListaS binario = this.obtenerB(raiz, letra);
         String cad = "";
         for (int i = 0; i < binario.getTamanio() - 1; i++) {
             cad += binario.get(i);
@@ -287,7 +286,7 @@ public class ArbolHuffMan {
         return cad;
     }
 
-    public ListaS obtenerBinario(NodoHuffman nodo, char c) {
+    public ListaS obtenerB(NodoHuffman nodo, char c) {
         if (nodo == null) {
             return new ListaS();
         }
@@ -297,13 +296,13 @@ public class ArbolHuffMan {
             return listaencontro;
         }
 
-        ListaS listaIzquierda = obtenerBinario(nodo.izquierdo, c);
+        ListaS listaIzquierda = obtenerB(nodo.izquierdo, c);
         if (listaIzquierda.getTamanio() > 0) {
             listaIzquierda.insertarAlInicio(0);
             return listaIzquierda;
         }
 
-        ListaS listaDerecha = obtenerBinario(nodo.derecho, c);
+        ListaS listaDerecha = obtenerB(nodo.derecho, c);
         if (listaDerecha.getTamanio() > 0) {
             listaDerecha.insertarAlInicio(1);
             return listaDerecha;
